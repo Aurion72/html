@@ -104,7 +104,7 @@ class FormBuilder extends FormBuilderBase
             $messages = $errorBag->getMessages();
             if (isset($messages[$name])) {
 
-                if ($type !== 'radio') {
+                if ($type !== 'radio' && $type !== 'checkbox') {
                     $error_html = '<div class="invalid-feedback">';
 
                     foreach ($messages[$name] as $message) {
@@ -123,7 +123,7 @@ class FormBuilder extends FormBuilderBase
                     }
                 }
 
-                if ($type !== 'radio') $error_html .= '</div>';
+                if ($type !== 'radio' && $type !== 'checkbox') $error_html .= '</div>';
             }
         }
 
