@@ -63,7 +63,9 @@ class FormBuilder extends FormBuilderBase
         array $optgroupsAttributes = []
     ) {
 
-        return parent::select($name, $list, $selected, $selectAttributes, $optionsAttributes, $optgroupsAttributes).' '.$this->generateErrorHtml('select', $name, $selectAttributes);
+	$html = $this->generateErrorHtml('select', $name, $selectAttributes);
+        return parent::select($name, $list, $selected, $selectAttributes, $optionsAttributes, $optgroupsAttributes).' '.$html;
+    
     }
 
     /**
