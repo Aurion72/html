@@ -49,6 +49,13 @@ class FormBuilderBase
      */
     protected $csrfToken;
 
+        /**
+     * Inject the csrf_token hidden input automatically
+     *
+     * @var bool
+     */
+    protected $injectCsrfToken = true;
+
     /**
      * Consider Request variables while auto fill.
      * @var bool
@@ -148,7 +155,7 @@ class FormBuilderBase
         // If the method is PUT, PATCH or DELETE we will need to add a spoofer hidden
         // field that will instruct the Symfony request to pretend the method is a
         // different method than it actually is, for convenience from the forms.
-        $append = $this->getAppendage($method, (!in_array('csrf_token', $options) || $options['csrf_token']));
+        $append = $this->getAppendage($method);
 
         if (isset($options['files']) && $options['files']) {
             $options['enctype'] = 'multipart/form-data';
@@ -232,6 +239,19 @@ class FormBuilderBase
         $token = ! empty($this->csrfToken) ? $this->csrfToken : $this->session->token();
 
         return $this->hidden('_token', $token);
+    }
+
+
+    /**
+     * Enable or disable automatic csrf_token injection
+     * @param bool $inject
+     *
+     * @return self
+     */
+    public function injectCsrfToken($inject = true)
+    {
+        $this->injectCsrfToken = $inject;
+        return $this;
     }
 
     /**
@@ -1186,7 +1206,7 @@ class FormBuilderBase
      *
      * @return string
      */
-    protected function getAppendage($method, $with_token = true)
+    protected function getAppendage($method)
     {
         list($method, $appendage) = [strtoupper($method), ''];
 
@@ -1197,12 +1217,13 @@ class FormBuilderBase
             $appendage .= $this->hidden('_method', $method);
         }
 
-        // If the method is something other than GET we will go ahead and attach the
-        // CSRF token to the form, as this can't hurt and is convenient to simply
-        // always have available on every form the developers creates for them.
-        if ($method !== 'GET' && $with_token) {
+        // If the method is something other than GET and $injectCsrfToken property is true,
+        // we will attach the CSRF token to the form.
+        if ($method !== 'GET' && $this->injectCsrfToken) {
             $appendage .= $this->token();
         }
+
+        $this->injectCsrfToken = true;
 
         return $appendage;
     }
