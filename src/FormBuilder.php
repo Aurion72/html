@@ -102,7 +102,11 @@ class FormBuilder extends FormBuilderBase
             if ($type === 'label') $name = $options['error-for'];
 
             $errorBag = $options['errorBag'] ?? 'default';
-            $errorBag = $errors->getBag($errorBag);
+            if($errors instanceof ViewErrorBag){
+                $errorBag = $errors->getBag($errorBag);
+            }else{
+                $errorBag = $errors;
+            }
             $messages = $errorBag->getMessages();
             if (isset($messages[$name])) {
 
