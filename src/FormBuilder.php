@@ -2,6 +2,8 @@
 
 namespace Collective\Html;
 
+use Illuminate\Support\ViewErrorBag;
+
 class FormBuilder extends FormBuilderBase
 {
     /**
