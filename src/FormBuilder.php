@@ -100,6 +100,11 @@ class FormBuilder extends FormBuilderBase
         $error_html = null;
 
         if ($errors) {
+            $index = $name;
+            
+            if($options['error-index'] ?? false){
+                $index = $options['error-index'];
+            }
 
             if ($type === 'label') $name = $options['error-for'];
 
@@ -110,12 +115,12 @@ class FormBuilder extends FormBuilderBase
                 $errorBag = $errors;
             }
             $messages = $errorBag->getMessages();
-            if (isset($messages[$name])) {
+            if (isset($messages[$index])) {
 
                 if ($type !== 'radio' && $type !== 'checkbox') {
                     $error_html = '<div class="invalid-feedback">';
 
-                    foreach ($messages[$name] as $message) {
+                    foreach ($messages[$index] as $message) {
                         if (array_key_exists('short-feedback', $options)) {
                             $message = 'Requis';
                             unset($options['short-feedback']);
